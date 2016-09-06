@@ -28,21 +28,35 @@ defmodule LoggerLedBackend do
 
   @doc false
   def init({__MODULE__, opts}) do
-    Logger.debug "#{__MODULE__} Starting for led #{inspect @led}"
-    {:ok, %{}}
+    level = Dict.get(opts, :level, @min_level)
+    led = Dict.get(opts, :led, @led)
+    on_time = Dict.get(opts, :on_time, @on_time)
+    Logger.debug "#{__MODULE__} Starting for led #{inspect led}"
+    {:ok, %{level: level, led: led, on_time: on_time}}
   end
 
   def init(__MODULE__), do: init({__MODULE__, []})
 
-  @doc false
-  def handle_event({level, _gl, {Logger, message, timestamp, metadata}}, _state) do
-    if ((is_nil(@min_level) or Logger.compare_levels(level, @min_level) != :lt) and @led), do: spawn(&blink/0)
-    {:ok, %{}}
+  def handle_call({:configure, options}, %{level: l, led: led, on_time: time} = _state) do
+    level = Dict.get(options, :level, l)
+    led = Dict.get(options, :led, led)
+    on_time = Dict.get(options, :on_time, time)
+    {:ok, :ok, %{level: level, led: led, on_time: on_time}}
   end
 
-  defp blink do
-    Nerves.Leds.set [{@led, true}]
-    :timer.sleep @on_time
-    Nerves.Leds.set [{@led, false}]
+  @doc false
+  def handle_event({level, _gl, {Logger, _message, _timestamp, _metadata}}, %{level: min_level, led: led, on_time: time} = state) do
+    if ((is_nil(min_level) or Logger.compare_levels(level, min_level) != :lt) and led), do: spawn(fn() -> blink(led, time) end)
+    {:ok, state}
+  end
+
+  def handle_event(:flush, state) do
+    {:ok, state}
+  end
+
+  defp blink(led, time) do
+    Nerves.Leds.set [{led, true}]
+    :timer.sleep time
+    Nerves.Leds.set [{led, false}]
   end
 end
