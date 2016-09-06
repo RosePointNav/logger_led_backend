@@ -24,7 +24,7 @@ defmodule LoggerLedBackend do
 
   @min_level  Application.get_env(:logger_led_backend, :level, :info)
   @led        Application.get_env(:logger_led_backend, :led, :error)
-  @on_time    Application.get_env(:logger_led_backend, :rate, 100)
+  @on_time    Application.get_env(:logger_led_backend, :on_time, 50)
 
   @doc false
   def init({__MODULE__, opts}) do

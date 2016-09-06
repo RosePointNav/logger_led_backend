@@ -1,6 +1,6 @@
 defmodule LoggerLedBackend.Mixfile do
 
-  @version "0.1.0"
+  @version "0.1.1"
 
   use Mix.Project
 
