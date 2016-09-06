@@ -12,11 +12,13 @@ defmodule LoggerLedBackend do
 
   LoggerLedBackend is configured when specified, and supports the following options:
 
-  `:led` - the led to flash when an event is received
+  `:led` - the led to flash when an event is received (default: :error)
 
-  `:on_time` - how long to keep the led on when event received
+  `:on_time` - how long to keep the led on when event received (default: 50)
 
-  `:level` - the lowest level which triggers the LED.
+  `:level` - the lowest level which triggers the LED. (default: :info)
+
+  Configuration may also be conducted using `Logger.configure_backends/2`
   """
 
   use GenEvent
