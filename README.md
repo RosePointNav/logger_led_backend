@@ -26,11 +26,20 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
 ## Configuration
 
-By default the `:error` led will be turned on for 100ms and then extinquished when an `Logger.error` event is received.
+  In your config, simply do something like this:
 
-The user may adjust the `Logger` level causing trigger, on time and what `Nerves.Led` name to use in the applications config
+  ```elixir
+    config :logger_led_backend, level: :error, led: :error
+  ```
 
-```elixir
-  #in config/config/exs
-  config :logger_led_backend, level: :info, on_time: 50, led: :power
-```
+  LoggerLedBackend is configured when specified, and supports the following options:
+
+  `:led` - the `Nerves.Leds` led name to flash when an event is received (default: :error)
+
+  `:led_pull` - direction to pull led `:on | :off` (default: :on)
+
+  `:on_time` - how long to keep the led_pull active when event received (default: 50)
+
+  `:level` - the lowest level which triggers the LED. (default: :info)
+
+  Configuration may also be conducted using `Logger.configure_backends/2`
