@@ -44,6 +44,14 @@ defmodule LoggerLedBackendTest do
     :ets.insert :logger_test, brightness: 0
   end
 
+  test "turn off led" do
+    Nerves.Leds.set test_led: true
+    Logger.configure_backend LoggerLedBackend, [led_level: :off]
+    Logger.error "Test Off"
+    sleep()
+    assert check(:brightness) == 0
+  end
+
   defp check(key) do
     case :ets.lookup(:logger_test, key) do
       [] -> nil
