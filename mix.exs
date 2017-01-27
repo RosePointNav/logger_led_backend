@@ -21,7 +21,8 @@ defmodule LoggerLedBackend.Mixfile do
   end
 
   def application do
-    []
+    [ applications: [:nerves_leds]
+    ]
   end
 
   defp deps, do: [
