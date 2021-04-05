@@ -1,39 +1,41 @@
 defmodule LoggerLedBackend.Mixfile do
 
-  @version "0.3.0"
+  @version "2.0.0"
 
   use Mix.Project
 
   def project do
     [ app: :logger_led_backend,
       version: @version,
-      elixir: "~> 1.0",
+      elixir: "~> 1.11",
       deps: deps(),
-      description: "Adds backend to Logger that blinks an LED",
+      description: description(),
       package: package(),
       name: "LoggerLedBackend",
-      description: "Flashes LED when log events meeting level received",
       docs: [
         source_ref: "v#{@version}", main: "LoggerLedBackend",
         source_url: "https://github.com/CaptChrisD/logger_led_backend",
-#       main: "extra-readme",
         extras: [ "README.md", "CHANGELOG.md"] ]]
   end
 
-  def application do
-    [ applications: [:nerves_leds]
+  def application do [
+    applications: [:logger, :nerves_leds]
     ]
   end
 
+  defp description do
+    "A backend for Logger that Flashes LED when log events meeting level received"
+  end
+
   defp deps, do: [
-    {:ex_doc, "~> 0.11", only: :dev},
-    {:nerves_leds, "~>0.7.0"}
+    {:ex_doc, "~> 0.23"},
+    {:nerves_leds, "~>0.8.1"}
   ]
 
   defp package do
-    [ maintainers: ["Chris Dutton"],
+    [ maintainers: ["Rose Point"],
       licenses: ["MIT"],
-      links: %{github: "https://github.com/CaptChrisD/logger_led_backend"},
+      links: %{github: "https://github.com/rosepointnav/logger_led_backend"},
       files: ~w(lib config) ++ ~w(README.md CHANGELOG.md LICENSE mix.exs) ]
   end
 
